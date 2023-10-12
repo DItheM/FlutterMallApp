@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "803824238469",
+    "project_id": "shopvista-ec49d",
+    "storage_bucket": "shopvista-ec49d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803824238469:android:6a47b047e9eccba0e48eec",
+        "android_client_info": {
+          "package_name": "com.example.app_mall"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgpsJFJE22EJi5VO8qQLUxQMc2XL2AoRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
