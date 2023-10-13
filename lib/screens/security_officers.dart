@@ -79,9 +79,12 @@ class SecurityOfficerScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AlarmScreen(
-                                screenTitle: "Fire Alarm",
-                                icon: Icons.fireplace,
-                                uid: uid),
+                              alarmType: "fire",
+                              icon: Icons.fireplace,
+                              screenTitle: "Fire Alarm",
+                              uid: uid,
+                              name: name,
+                            ),
                           ),
                         );
                       },
@@ -113,9 +116,12 @@ class SecurityOfficerScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AlarmScreen(
-                                screenTitle: "Criminal Alarm",
-                                icon: Icons.security,
-                                uid: uid),
+                              alarmType: "criminal",
+                              icon: Icons.security,
+                              screenTitle: "Criminal Alarm",
+                              uid: uid,
+                              name: name,
+                            ),
                           ),
                         );
                       },
