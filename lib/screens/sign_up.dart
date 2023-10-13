@@ -53,7 +53,7 @@ class SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Signup Page')),
+      appBar: AppBar(title: const Text('Signup')),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -87,7 +87,6 @@ class SignupPageState extends State<SignupPage> {
             ),
             TextField(
               decoration: const InputDecoration(labelText: 'Name'),
-              obscureText: true,
               onChanged: (value) {
                 setState(() {
                   name = value;
@@ -96,6 +95,7 @@ class SignupPageState extends State<SignupPage> {
             ),
             DropdownButtonFormField(
               value: selectedAccountType,
+              hint: const Text("Select Account Type"),
               onChanged: (value) {
                 setState(() {
                   selectedAccountType = value.toString();
