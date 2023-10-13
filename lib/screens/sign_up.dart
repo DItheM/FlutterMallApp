@@ -15,7 +15,7 @@ class SignupPageState extends State<SignupPage> {
   String email = '';
   String password = '';
   String retypePassword = '';
-  String selectedAccountType = 'Customer'; // Default selection
+  String selectedAccountType = '';
   String name = '';
 
   Future<void> signUpAndAddToFirestore(
@@ -94,7 +94,6 @@ class SignupPageState extends State<SignupPage> {
               },
             ),
             DropdownButtonFormField(
-              value: selectedAccountType,
               hint: const Text("Select Account Type"),
               onChanged: (value) {
                 setState(() {
@@ -123,6 +122,8 @@ class SignupPageState extends State<SignupPage> {
                   showToastMessage('Passwords do not match');
                 } else if (name.isEmpty) {
                   showToastMessage('Name cannot be empty');
+                } else if (selectedAccountType.isEmpty) {
+                  showToastMessage('Account type cannot be empty');
                 } else {
                   // Valid email and password, perform signup
                   signUpAndAddToFirestore(email, password, selectedAccountType);
