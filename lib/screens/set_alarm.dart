@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../services/show_toast.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -31,7 +30,10 @@ class AlarmScreenState extends State<AlarmScreen> {
   Future<void> setAlarm(String floorName, String sectionName) async {
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection('alarms').doc().set({
+
+      String key = firestore.collection('alarms').doc().id;
+
+      await firestore.collection('alarms').doc(key).set({
         'alarmType': widget.alarmType,
         'name': widget.name,
         'uid': widget.uid,
@@ -42,8 +44,10 @@ class AlarmScreenState extends State<AlarmScreen> {
       await firestore.collection('latest_alarm').doc("latest").set({
         'alarmType': widget.alarmType,
         'name': widget.name,
+        'uid': widget.uid,
         'floorName': selectedFloor,
         'sectionName': selectedSection,
+        'alarmId': key,
       });
 
       showToastMessage('Alarm sent');

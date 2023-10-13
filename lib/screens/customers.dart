@@ -3,7 +3,9 @@ import 'package:app_mall/services/show_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class CustomerScreen extends StatelessWidget {
+import '../services/show_alert.dart';
+
+class CustomerScreen extends StatefulWidget {
   final String accountType;
   final String name;
   final String uid;
@@ -15,6 +17,21 @@ class CustomerScreen extends StatelessWidget {
       required this.uid});
 
   @override
+  CustomerScreenState createState() => CustomerScreenState();
+}
+
+class CustomerScreenState extends State<CustomerScreen> {
+  late FirestoreDataListener listener;
+
+  @override
+  void initState() {
+    super.initState();
+    listener = FirestoreDataListener(
+        context: context, accountType: widget.accountType, uid: widget.uid);
+    listener.startListening();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -23,7 +40,7 @@ class CustomerScreen extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Account Information'),
+          title: const Text('Dashboard'),
           automaticallyImplyLeading: false, // Hide the back button
           actions: <Widget>[
             IconButton(
@@ -31,6 +48,7 @@ class CustomerScreen extends StatelessWidget {
               onPressed: () async {
                 try {
                   await FirebaseAuth.instance.signOut();
+                  listener.stopListening();
                   showToastMessage('Logged out');
                   if (context.mounted) {
                     Navigator.push(
@@ -52,11 +70,11 @@ class CustomerScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Account Type: $accountType",
+                "Account Type: ${widget.accountType}",
                 style: const TextStyle(fontSize: 20),
               ),
               Text(
-                "User Name: $name",
+                "User Name: ${widget.name}",
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
