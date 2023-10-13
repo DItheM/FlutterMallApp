@@ -12,18 +12,19 @@ class SignupPage extends StatefulWidget {
 }
 
 class SignupPageState extends State<SignupPage> {
-  String username = '';
+  String email = '';
   String password = '';
   String retypePassword = '';
   String selectedAccountType = 'Customer'; // Default selection
+  String name = '';
 
   Future<void> signUpAndAddToFirestore(
-      String username, String password, String selectedAccountType) async {
+      String email, String password, String selectedAccountType) async {
     try {
       // Create the user in Firebase Authentication
       UserCredential authResult =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: username,
+        email: email,
         password: password,
       );
       User? user = authResult.user;
@@ -34,12 +35,8 @@ class SignupPageState extends State<SignupPage> {
       // Add the user to the 'all_users' collection (if needed)
       await firestore.collection('all_users').doc(user!.uid).set({
         'accountType': selectedAccountType,
+        'name': name,
       });
-
-      await firestore
-          .collection('users')
-          .doc(selectedAccountType)
-          .set({'uid': user.uid});
 
       showToastMessage('Account created');
     } catch (e) {
@@ -63,10 +60,10 @@ class SignupPageState extends State<SignupPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextField(
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Email'),
               onChanged: (value) {
                 setState(() {
-                  username = value;
+                  email = value;
                 });
               },
             ),
@@ -88,6 +85,15 @@ class SignupPageState extends State<SignupPage> {
                 });
               },
             ),
+            TextField(
+              decoration: const InputDecoration(labelText: 'Name'),
+              obscureText: true,
+              onChanged: (value) {
+                setState(() {
+                  name = value;
+                });
+              },
+            ),
             DropdownButtonFormField(
               value: selectedAccountType,
               onChanged: (value) {
@@ -105,9 +111,9 @@ class SignupPageState extends State<SignupPage> {
             ElevatedButton(
               onPressed: () {
                 // Check for password match and handle signup logic here
-                // Validate username and password
-                if (username.isEmpty) {
-                  showToastMessage('Username cannot be empty');
+                // Validate email and password
+                if (email.isEmpty) {
+                  showToastMessage('Email cannot be empty');
                 } else if (password.isEmpty) {
                   showToastMessage('Password cannot be empty');
                 } else if (password.length <= 6) {
@@ -115,10 +121,11 @@ class SignupPageState extends State<SignupPage> {
                       'Password must be at least 7 characters long');
                 } else if (password != retypePassword) {
                   showToastMessage('Passwords do not match');
+                } else if (name.isEmpty) {
+                  showToastMessage('Name cannot be empty');
                 } else {
-                  // Valid username and password, perform signup
-                  signUpAndAddToFirestore(
-                      username, password, selectedAccountType);
+                  // Valid email and password, perform signup
+                  signUpAndAddToFirestore(email, password, selectedAccountType);
                 }
               },
               child: const Text('Signup'),

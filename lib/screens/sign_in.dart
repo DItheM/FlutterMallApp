@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../services/show_toast.dart';
+import 'customers.dart';
+import 'owners.dart';
+import 'security_officers.dart';
 import 'sign_up.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,19 +16,28 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  String username = '';
+  String email = '';
   String password = '';
 
-  Future<void> signInWithUsernameAndPassword(
+  Future<String> signInWithUsernameAndPassword(
       String email, String password) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      showToastMessage('Sign-in successful');
+
+      // Retrieve the user's account type from Firestore
+      final user = FirebaseAuth.instance.currentUser;
+      final userData = await FirebaseFirestore.instance
+          .collection('users') // Change to your Firestore collection
+          .doc(user!.uid)
+          .get();
+      final accountType = userData['accountType'];
+      return accountType;
     } catch (e) {
       showToastMessage('Error signing in: $e');
+      return "";
     }
   }
 
@@ -38,10 +51,10 @@ class LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextField(
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Email'),
               onChanged: (value) {
                 setState(() {
-                  username = value;
+                  email = value;
                 });
               },
             ),
@@ -57,15 +70,42 @@ class LoginPageState extends State<LoginPage> {
             ElevatedButton(
               onPressed: () {
                 // Add login logic here
-                if (username.isEmpty) {
-                  showToastMessage('Username cannot be empty');
+                if (email.isEmpty) {
+                  showToastMessage('Email cannot be empty');
                 } else if (password.isEmpty) {
                   showToastMessage('Password cannot be empty');
                 } else if (password.length <= 6) {
                   showToastMessage(
                       'Password must be at least 7 characters long');
                 } else {
-                  signInWithUsernameAndPassword(username, password);
+                  String accountType =
+                      signInWithUsernameAndPassword(email, password) as String;
+                  // Navigate to the relevant screen based on the account type
+                  if (accountType == 'Customer') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CustomerScreen(accountType: accountType),
+                      ),
+                    );
+                  } else if (accountType == 'Shop Owner') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OwnerScreen(accountType: accountType),
+                      ),
+                    );
+                  } else if (accountType == 'Security Officer') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SecurityOfficerScreen(accountType: accountType),
+                      ),
+                    );
+                  }
                 }
               },
               child: const Text('Login'),
