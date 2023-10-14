@@ -20,6 +20,7 @@ class FirestoreDataListener {
     required this.uid,
   });
 
+  //method to set the firestore db data change listener
   void startListening() {
     _subscription = _firestore
         .collection("latest_alarm")
@@ -37,6 +38,7 @@ class FirestoreDataListener {
     });
   }
 
+  //Pop up for security officer and shop owner
   void forSO(String msg, String floor, String section, String reporter) {
     Flushbar(
       messageText: Center(
@@ -103,6 +105,7 @@ class FirestoreDataListener {
     ).show(context);
   }
 
+  //Pop up for customer
   void forCus(String msg, String floor, String section) {
     Flushbar(
       messageText: Center(
@@ -170,6 +173,7 @@ class FirestoreDataListener {
     ).show(context);
   }
 
+  //method to show popup
   void showDataUpdatedPopup(Map<String, dynamic> updatedValue) {
     String f = "Fire Has Occurred";
     String c = "Criminal Activity Reported";
@@ -186,7 +190,7 @@ class FirestoreDataListener {
       }
     }
 
-    if (accountType == "Shop Owner") {
+    if (accountType == "Shop Owner" && updatedValue["uid"] != uid) {
       if (updatedValue["alarmType"] == "fire") {
         forSO(f, floor, section, reporter);
       } else {
@@ -201,6 +205,7 @@ class FirestoreDataListener {
     }
   }
 
+//method to close the firestore db data change listener
   void stopListening() {
     _subscription.cancel();
   }

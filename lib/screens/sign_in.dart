@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:another_flushbar/flushbar.dart';
 
 import '../services/show_toast.dart';
 import 'customers.dart';
@@ -24,34 +23,6 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Future<void> setAlarmListener(BuildContext context) async {
-  //   void showDataUpdatedPopup(String updatedValue) {
-  //     Flushbar(
-  //       title: 'Data Updated!',
-  //       message: 'Updated value: $updatedValue',
-  //       duration: const Duration(seconds: 3),
-  //       icon: const Icon(
-  //         Icons.info,
-  //         size: 28.0,
-  //         color: Colors.red,
-  //       ),
-  //     ).show(context);
-  //   }
-
-  //   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //   firestore
-  //       .collection('latest_alarm')
-  //       .doc('latest')
-  //       .snapshots()
-  //       .listen((event) {
-  //     if (event.exists) {
-  //       final data = event.data() as Map<String, dynamic>;
-  //       final updatedField = data['name'];
-  //       showDataUpdatedPopup(updatedField);
-  //     }
-  //   });
-  // }
-
   Future<void> signInWithUsernameAndPassword(
       BuildContext context, String email, String password) async {
     try {
@@ -63,7 +34,7 @@ class LoginPageState extends State<LoginPage> {
       // Retrieve the user's account type from Firestore
       final user = FirebaseAuth.instance.currentUser;
       final userData = await FirebaseFirestore.instance
-          .collection('all_users') // Change to your Firestore collection
+          .collection('all_users')
           .doc(user!.uid)
           .get();
       final accountType = userData['accountType'];
@@ -96,7 +67,6 @@ class LoginPageState extends State<LoginPage> {
             ),
           );
         }
-        // setAlarmListener(context);
       }
       showToastMessage("Logged in");
 

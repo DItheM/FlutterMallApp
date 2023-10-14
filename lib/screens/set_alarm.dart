@@ -27,10 +27,14 @@ class AlarmScreenState extends State<AlarmScreen> {
   String selectedSection = '';
   String pageTitle = '';
 
+  //method to set alarm
+  //update data to the firestore db
+  //after set alarm, go back
   Future<void> setAlarm(String floorName, String sectionName) async {
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+      //get the alarm id
       String key = firestore.collection('alarms').doc().id;
 
       await firestore.collection('alarms').doc(key).set({
